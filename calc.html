@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <tittle>Advanced Scientific Calculator</tittle>
+    <style>
+      body{
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f4f4;
+        color: #333;
+        text-align: center;
+        margin-top: 30px;
+        transition: background 0.3s,color 0.3s;
+      }
+      body.dark{
+        background: #121212;
+        color: #f5f5f5;
+      }
+      input{
+        width: 320px;
+        height: 50px;
+        font-size: 22px;
+        text-align: right;
+        margin-bottom: 10px;
+        border: 2px solid #ccc;
+        padding-right: 10px;
+        background: #fff;
+      }
+      body.dark input{
+        background: #333;
+        color: #fff;
+        border-color: #555;
+
+      }
+      .buttons{
+        display: grid;
+        grid-template-columns: repeat(6,60px);
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      button{
+        height: 50px;
+        font-size: 15px;
+        border: none;
+        border-radius: 8px;
+        background: #ddd;
+        cursor: pointer;
+        transition: 0.2s;
+
+      }
+      button:hover{
+        background: #bbb;
+      }
+      button.operator{
+        background: #90caf9;
+
+      }
+      button.equal{
+        background: #81c784;grid-column: span 2;
+      }
+      button.clear{
+        background: #e57373;
+      }
+      button.memory{
+        background: #ffd54f;
+      }
+      body.dark button{
+        background: #444;color:#fff;
+      }
+      body.dark button:hover{
+        background: #666;
+      }
+      .controls{
+        margin-bottom: 15px;
+      }
+      #history{
+        max-width: 320px;
+        margin:0 auto;
+        text-align: right;
+        font-size: 14px;
+        color: #555;
+        background: #eee;
+        border-radius: 8px;
+        padding: 10px;
+        height: 100px;
+        overflow-y: auto;
+      }
+      body.dark #history{
+        background: #222;
+        color: #aaa;
+      }
+      #themeToggle{
+        margin-left: 15px;
+        padding: 5px 10px;
+        border-radius: 8px;
+
+      }
+      button.active {
+      background: #ffa726 !important;
+      transform: scale(0.95);
+      }
+
+    </style>
+  </head>
+<body>
+  <h2>Advanced Scientific Calculator</h2>
+  <div class="controls">
+    <label>
+      Mode:
+      <select id="angleMode">
+        <option value="DEG">Degrees</option>
+        <option value="RAD">Radians</option>
+      </select>
+    </label>
+    <button id="themeToggle">Dark Mode</button>
+  </div>
+  <input type="text" id="display" disabled>
+  <div class="buttons">
+    <button onclick="press('7')">7</button>
+    <button onclick="press('8')">8</button>
+    <button onclick="press('9')">9</button>
+    <button onclick="press('/')">/</button>
+    <button onclick="press('(')">(</button>
+    <button onclick="press(')')">)</button>
+    <button onclick="press('4')">4</button>
+    <button onclick="press('5')">5</button>
+    <button onclick="press('6')">6</button>
+    <button onclick="press('*')">*</button>
+    <button onclick="press('Math.pow(')">x<sup>y</sup></button>
+    <button onclick="press('Math.sqrt(')">√</button>
+    <button onclick="press('1')">1</button>
+    <button onclick="press('2')">2</button>
+    <button onclick="press('3')">3</button>
+    <button onclick="press('-')">-</button>
+    <button onclick="press('sin(')">sin</button>
+    <button onclick="press('cos(')">cos</button>
+    <button onclick="press('0')">0</button>
+    <button onclick="press('.')">.</button>
+    <button onclick="calculate()" class="equal">=</button>
+    <button onclick="press('+')">+</button>
+    <button onclick="press('tan(')">tan</button>
+    <button onclick="press('log(')">log</button>
+    <button onclick="press('Math.E')">e</button>
+    <button onclick="press('Math.PI')">π</button>
+
+      <button onclick="press('1.61803398875')">φ</button>
+    <button onclick="press('Math.random()')">Rand</button>
+
+    <button onclick="press('exp(')">exp</button>
+    <button onclick="press('ln(')">ln</button>
+    <button onclick="clearDisplay()" class="clear">C</button>
+    <button onclick="backspace()">⌫</button>
+
+    <button onclick="memoryAdd()" class="memory">M+</button>
+    <button onclick="memorySubtract()" class="memory">M-</button>
+    <button onclick="memoryRecall()" class="memory">MR</button>
+    <button onclick="memoryClear()" class="memory">MC</button>
+   
+  </div>
+
+  <h3>History</h3>
+  <div id="history"></div>
+  <script>
+    const display= document.getElementById('display');
+      const historyDiv= document.getElementById('history');
+        const angleMode= document.getElementById('angleMode');
+        let memory=0;
+
+        function press(value){
+          display.value += value;
+        }
+
+        function toRadians(x){
+          return(x * Math.PI)/180;
+        }
+        function sin(x){
+          return Math.sin(angleMode.value==="DEG" ? toRadians(x) : x);
+        }
+
+        function cos(x){
+          return Math.cos(angleMode.value==="DEG" ? toRadians(x) : x);
+        }
+
+        function tan(x){
+          return Math.tan(angleMode.value==="DEG" ? toRadians(x) : x);
+        }
+
+        function log(x){
+          return Math.log10(x) ;
+        }
+         function ln(x){
+          return Math.log(x) ;}
+
+           function exp(x){
+          return Math.exp(x) ;}
+
+          function calculate(){
+            try{
+              const result= eval(display.value);
+                    historyDiv.innerHTML += 
+                    '<div>${display.value}= <b>${result}</b></div>';
+                    display.value=result;
+                    historyDiv.scrollTop = historyDiv.scrollHeight;
+            } catch{
+              display.value="Error";
+
+            }
+          }
+
+          function clearDisplay(){
+            display.value = '';
+          }
+          function backspace(){
+            display.value = display.value.slice(0,-1);
+          }
+
+          document.addEventListener('keydown',(event) =>{
+            const key =event.key;
+            if(! isNaN(key)||['+','-','*','/','.','(',')'].includes(key)){
+              display.value += key;
+            }else if(key==='Enter') {
+              calculate();
+            }else if(key==='Backspace'){
+              backspace();
+
+            }else if(key.toLowerCase()==='c'){
+              clearDisplay();
+            }
+              highlightButton(key);
+          });
+
+          function memoryAdd(){
+            memory +=Number(display.value)||0;
+          }
+           function memorySubtract(){
+            memory -=Number(display.value)||0;}
+
+          function memoryRecall(){
+            display.value += memory;
+          }
+
+          function memoryClear(){
+            memory=0;
+          }
+
+          const themeToggle = document.getElementById('themeToggle');
+
+          themeToggle.addEventListener('click',() => {
+            document.body.classList.toggle('dark');
+            themeToggle.textContent = document.body.classList.contains('dark')
+               ? 'Light Mode'
+               : 'Dark Mode';
+          });
+
+            function highlightButton(key) {
+      const buttons = document.querySelectorAll('button');
+      buttons.forEach(btn => {
+        if (btn.textContent.trim() === key || (key === 'Enter' && btn.textContent.trim() === '=')) {
+          btn.classList.add('active');
+          setTimeout(() => btn.classList.remove('active'), 150);
+        }
+      });
+    }
+           
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('mousedown', () => {
+        btn.classList.add('active');
+      });
+      btn.addEventListener('mouseup', () => {
+        setTimeout(() => btn.classList.remove('active'), 150);
+      });
+    });
+  </script>
+</script>
+</body>
+</html>
+      
+       
+        
+        
+
+        
+            
+         
+        
+        
+
+       
+        
+
+    
+
+    
+    
+    
+    
+    
+    
+   
+
+
+       
+    
+           
+           
+           
+            
+     
+
+
+        
+    
+    </html>
